@@ -1,5 +1,6 @@
 import Footer from "../layout/Footer";
 import Header from "../layout/Header";
+import Body from "../layout/Body";
 
 const RootProvider: React.FC<{
   children: React.ReactElement;
@@ -9,6 +10,7 @@ const RootProvider: React.FC<{
       <Header />
       {children}
       <Footer />
+      <Body/>
     </div>
   );
 };
