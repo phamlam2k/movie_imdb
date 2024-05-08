@@ -1,0 +1,23 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+.slick-hero .slick-prev {
+    z-index: 15;
+    left: 30px;
+
+}
+
+.slick-hero .slick-next {
+     z-index: 15;
+    right: 30px;
+}
+
+#overlay-slick-hero {
+    background: linear-gradient( 
+        to right,
+    theme('colors.body'),
+    transparent,
+    theme('colors.body')
+    );
+   
+}

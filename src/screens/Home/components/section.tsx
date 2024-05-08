@@ -7,9 +7,9 @@ interface Props {
 
 export const Section = (props: Props) => {
   return (
-    <div className="">
+    <div className="w-[90%] h-[450px] mx-auto">
       {props.title ? (
-        <h1 className="text-xl px-6 py-1.5">{props.title}</h1>
+        <h1 className=" text-xl px-6 py-1.5">{props.title}</h1>
       ) : (
         ""
       )}

@@ -44,7 +44,7 @@ export const SearchResult = (props: Props) => {
                 rounded-md
                 overflow-hidden
                 bg-header
-
+                z-20
             '
     >
       {items.map((film, id) => (
