@@ -8,18 +8,18 @@ const MovieList = () => {
     // Function to fetch movies
     const fetchMovies = async () => {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1&api_key=a37241f847697db472f3c7f222a20931');
+        const response = await fetch('httg/3/movie/now_playing?language=en-US&page=1&api_key=a37241f847697db472f3c7f222a20931');
         const data = await response.json();
         setMovies(data.results); // Set movies in state
-        setLoading(false); // Set loading to false once the data is received
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching data: ', error);
-        setLoading(false); // Ensure loading is false in case of error
+        setLoading(false);
       }
     };
 
-    fetchMovies(); // Call the fetchMovies function
-  }, []); // Empty dependency array means this effect runs only once after the initial render
+    fetchMovies(); 
+  }, []); 
  
   return (
     <div>
