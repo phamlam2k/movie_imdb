@@ -8,11 +8,16 @@ interface Props {
 
 export const Image = (props: Props) => {
   return (
-    <div  className={mergeClassName(
+    <div
+      className={mergeClassName(
         'bg-primary w-full rounded-lg overflow-hidde h-[460px]'
       )}
-      >
-      <img src={props.src} className='min-h-[200px] w-full h-full object-cover'></img>
+    >
+      <img
+        src={props.src}
+        className='min-h-[200px] w-full h-full object-cover'
+        alt='image_movie'
+      />
     </div>
   )
 }
