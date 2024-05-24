@@ -14,15 +14,15 @@ const ROUTERS: RouteObject[] = [
     element: <CatalogScreen type='movie' />
   },
   {
-    path: '/tv',
+    path: '/tv/',
     element: <CatalogScreen type='tv' />,
     children: [
       {
-        path: '/:id',
+        path: ':id/',
         element: <Films mediaType='tv' />,
         children: [
           {
-            path: '/season/:seasonNumber',
+            path: 'season/:seasonNumber',
             element: <Season />
           }
         ]
