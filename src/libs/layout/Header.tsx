@@ -20,34 +20,62 @@ mobile:px-6
 const MENU_CLASS_ACTIVE = ` bg-primary`
 
 const Header = () => {
-  const [pathName, setPathName] = useState('')
+  const location = useLocation()
+  const [params, _] = useSearchParams()
+  const navigate = useNavigate()
 
+  const [pathname, setPathname] = useState('')
   const pathnameRef = useRef('')
-  const defaultKeyWord = useRef('')
-  const searchRef = useRef<HTMLInputElement>(null)
+  const defaultKeyword = useRef('')
 
   const [keyword, setKeyword] = useState('')
-
   const [isSearchFocus, setSearchFocus] = useState(false)
+  const searchRef = useRef<HTMLInputElement>(null)
 
   const goToSearchPage = () => {
     if (keyword) {
-      defaultKeyWord.current = keyword
+      defaultKeyword.current = keyword
+      navigate(`/search?q=${keyword}`)
       setSearchFocus(false)
       searchRef.current?.blur()
+    }
+  }
+
+  const initKeyword = () => {
+    if (pathnameRef.current === '/search') {
+      setKeyword(defaultKeyword.current)
     } else {
       setKeyword('')
     }
   }
 
-  const getMenuClass = (path: string) => {
-    if (path === pathName) {
-      return mergeClassName(MENU_CLASS, MENU_CLASS_ACTIVE)
-    } else {
-      return mergeClassName(MENU_CLASS, '')
-    }
+  const onWindowClick = () => {
+    setSearchFocus(false)
+    initKeyword()
   }
 
+  const getMenuClass = (path: string) => {
+    if (path === pathname) {
+      return mergeClassName(MENU_CLASS, MENU_CLASS_ACTIVE)
+    }
+
+    return mergeClassName(MENU_CLASS, '')
+  }
+
+  useEffect(() => {
+    setPathname(location.pathname)
+    pathnameRef.current = location.pathname
+    defaultKeyword.current = params.get('q') || ''
+    initKeyword()
+  }, [location.pathname])
+
+  useEffect(() => {
+    window.addEventListener('click', onWindowClick)
+
+    return () => {
+      window.removeEventListener('click', onWindowClick)
+    }
+  }, [])
 
   return (
     <div className='bg-header p-3 flex items-center justify-between w-full'>

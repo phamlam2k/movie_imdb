@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+.scrollbar {
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+/* Style the scrollbar thumb (the draggable bar) */
+.scrollbar-thumb-primary {
+  background-color: #4f46e5; /* Customize scrollbar thumb color */
+}
+
+/* Style the scrollbar track (the area where the thumb moves) */
+.scrollbar-track-header {
+  background-color: #f0f0f0; /* Customize scrollbar track color */
+}
