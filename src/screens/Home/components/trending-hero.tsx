@@ -31,9 +31,9 @@ export const TrendingHero = (props: Props) => {
         <button className='px-3 py-5 flex items-center gap-3 bg-header cursor-pointer rounded-md h-2 '>
           <span className='cursor-pointer'> Play Trailer</span>
         </button>
-        {props.film.genreIds.map((genre) => (
+        {/* {props.film.genreIds.map((genre) => (
           <p>{Geners[genre]}</p>
-        ))}
+        ))} */}
       </div>
     </div>
   )

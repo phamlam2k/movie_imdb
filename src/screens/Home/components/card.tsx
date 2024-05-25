@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Film } from "../../../interface"
+import { IMAGE_URL ,  } from "../../../libs/config/common";
 
 interface Props {
     imageSrc: string
-    title: string
+    title?: string
+    original_name?: string
     onClick?: Function
     className?: string 
 }
@@ -11,12 +13,13 @@ interface Props {
 export const Card = (props: Props) => {
     const navigate = useNavigate()
 
+
     return (
     <div className={props.className}> 
-        <div className="mx-3 my-1.5 px-6 w-[100%] h-[400px] flex flex-col p-0 cursor-pointer gap-7"
+        <div className="mx-3 my-1.5 px-6 w-[100%] h-[450px] flex flex-col p-0 cursor-pointer gap-7"
              onClick={() => (props.onClick? props.onClick(): '')}>
-            <img src="" alt={props.title} className="w-full h-full bg-primary" />
-            <p className="py-1.5 line-">{props.title}</p>
+            <img src={props.imageSrc} alt={props.title} className="w-full h-full bg-primary object-cover" />
+            <p className="py-1.5 line-">{props.title?? props.original_name}</p>
         </div>
     </div>  
     );   

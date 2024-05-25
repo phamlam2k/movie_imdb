@@ -77,11 +77,6 @@ const CatalogScreen = (props: Props) => {
 
             </div>
           </h1>
-
-
-
-
-
         </div>
       </>
     </RootLayout>

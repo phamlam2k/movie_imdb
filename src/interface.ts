@@ -10,9 +10,9 @@ export interface Season {
   id: number
   seasonNumber: number
 }
+ 
 
-export interface FilmInterface {}
-export interface Film {
+export interface Film { 
   id: number
   mediaType: MediaType
   title: string
@@ -33,4 +33,7 @@ export interface Cast {
 export interface Trailer {
   id: number
   key: string
-}
+
+}             
+
+               
