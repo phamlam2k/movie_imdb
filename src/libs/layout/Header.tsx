@@ -136,10 +136,7 @@ const Header = () => {
         <IoIosSearch className='cursor-pointer text-white' size={18} />
         {/* tmp result */}
         {isSearchFocus ? (
-          <SearchResult
-            keyword={keyword}
-            goToSearchPage={goToSearchPage}
-          ></SearchResult>
+          <SearchResult keyword={keyword} goToSearchPage={goToSearchPage} />
         ) : (
           ''
         )}

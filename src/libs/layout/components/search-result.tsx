@@ -1,11 +1,9 @@
-import { useEffect, useState, useRef, useContext } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Film } from '../../../interface'
 import { mergeClassName } from '../../utils/common'
 import { searchKeyWord } from '../../api/api'
 import { IMAGE_URL, IMAGE_WIDTH } from '../../config/common'
-import { useGlobalContext } from '../../providers/RootLayout'
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   keyword: string
@@ -19,27 +17,24 @@ export const SearchResult = (props: Props) => {
 
   const searchTimeOut = useRef<any>('')
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const {genres} = useGlobalContext();
+  const fetch = async (keyword: string) => {
+    if (keyword) return
 
-
-
-  const fetch = async() => { 
-    if(!props.keyword) return
     clearTimeout(searchTimeOut.current)
-    searchTimeOut.current = setTimeout( async() => {
-      const res = await searchKeyWord(props.keyword)  
+    searchTimeOut.current = setTimeout(async () => {
+      const res = await searchKeyWord(keyword)
       console.log(res.totalResults)
       setTotalItem(res.totalResults)
       setItem(res.film)
     }, 10)
-   
   }
 
   useEffect(() => {
-    fetch()
+    fetch(props.keyword)
   }, [props.keyword])
+
   return (
     <div
       className='
@@ -62,22 +57,29 @@ export const SearchResult = (props: Props) => {
           onClick={() => navigate(`/${film.mediaType}/${film.id})`)}
         >
           {/* img */}
-          <div className={mergeClassName(
-            'bg-primary rounded-lg overflow-hidden h-24 w-48 flex-shrink-0'
-          )}
+          <div
+            className={mergeClassName(
+              'bg-primary rounded-lg overflow-hidden h-24 w-48 flex-shrink-0'
+            )}
           >
-            <img src={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} className=' w-full h-full object-cover rounded-lg'></img>
+            <img
+              src={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`}
+              className=' w-full h-full object-cover rounded-lg'
+              alt='poster'
+            />
           </div>
 
           {/* title and generes */}
           <div className='px-3 truncate'>
-            <p className='text-base font-semibold overflow-hidden'>{film.title}</p>
+            <p className='text-base font-semibold overflow-hidden'>
+              {film.title}
+            </p>
             <ul className='flex flex-wrap gap-1.5 opacity-70'>
               {film.genreIds.map((id, i) => (
                 <li key={i} className='text-sm'>
-                  {
+                  {/* {
                     genres[film.mediaType].find(g => g.id === id)?.name
-                  }
+                  } */}
                 </li>
               ))}
             </ul>

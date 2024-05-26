@@ -1,42 +1,47 @@
-import { MediaType } from '../../types/catalog.type';
-import Footer from '../layout/Footer';
-import Header from '../layout/Header';
-import { Genre } from '../../interface';
-import { createContext, ReactNode, useEffect, useState , useContext} from 'react';
-import { Geners } from './../config/common';
-import { getGenres } from '../api/api';
+import { MediaType } from '../../types/catalog.type'
+import Footer from '../layout/Footer'
+import Header from '../layout/Header'
+import { Genre } from '../../interface'
+import { createContext, useContext, useEffect, useReducer } from 'react'
+import { getGenres } from '../api/api'
+import todoReducer from './reducers/root.reducer'
+import { ACTION_KEYS } from '../config/key'
+import { Outlet } from 'react-router-dom'
 
 type Genres = {
-  [key in MediaType]: Genre[];
-};
+  [key in MediaType]: Genre[]
+}
 
-export const GlobalContext = createContext<{
-  genres: Genres;
-}>({
+export type IState = {
+  genres: Genres
+  grade: number
+}
+
+const initialState: IState = {
   genres: {
     movie: [],
-    tv: [],
-  }
-});
+    tv: []
+  },
+  grade: 0
+}
 
-export const useGlobalContext = () => useContext(GlobalContext);
+export const GlobalContext = createContext<IState>(initialState)
 
+export const GlobalReducer = createContext(null)
 
-const RootLayout: React.FC<{
-  children: ReactNode;
-}> = ({ children }) => {
-  const [genres, setGenres] = useState<Genres>({
-    movie: [],
-    tv: [],
-  });
+const RootLayout = () => {
+  const [value, dispatch] = useReducer(todoReducer, initialState)
 
   const fetchGenre = async () => {
     const movie = await getGenres('movie')
     const tv = await getGenres('tv')
 
-    setGenres({
-      movie,
-      tv
+    dispatch({
+      type: ACTION_KEYS.UPDATE_GENRES,
+      payload: {
+        movie,
+        tv
+      }
     })
   }
 
@@ -44,15 +49,23 @@ const RootLayout: React.FC<{
     fetchGenre()
   }, [])
 
-
-
   return (
-    <GlobalContext.Provider value={{ genres }}>
-      <Header />
-      {children}
-      <Footer />
+    <GlobalContext.Provider value={value}>
+      <GlobalReducer.Provider value={dispatch}>
+        <Header />
+        <Outlet />
+        <Footer />
+      </GlobalReducer.Provider>
     </GlobalContext.Provider>
-  );
-};
+  )
+}
 
-export default RootLayout;
+export default RootLayout
+
+export const useGlobalContext = () => {
+  return useContext(GlobalContext)
+}
+
+export const useGlobalReducer = () => {
+  return useContext(GlobalReducer)
+}
