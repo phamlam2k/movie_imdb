@@ -25,7 +25,7 @@ export const Geners = {
   10402: 'Music',
   9648: 'Mystery',
   10749: 'Romance',
-  878: 'Science Fiction',
+  878: 'Science Fiction',                             
   10770: 'TV Movie',
   53: 'Thriller',
   10742: 'War',

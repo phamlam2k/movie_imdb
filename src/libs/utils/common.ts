@@ -14,7 +14,7 @@ export const formatResult = (obj: any , mediaType?: MediaType, ): Film => {
     posterpath: obj.poster_path,
     genreIds: obj.genre_ids ?? [],
     mediaType: mediaType || obj.media_type,
-    seasons: obj.season ?? []
+    seasons: obj.seasons ?? []
   }
 }
 export const isFilm = (film: any): film is Film => {

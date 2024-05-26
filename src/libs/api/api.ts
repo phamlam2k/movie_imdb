@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios'
-import { Film } from '../../interface'
+import { Film, Genre } from '../../interface'
 import { MediaType } from '../../types/catalog.type'
 import axiosServices from '../config/axios'
-import { BASE_URL, NOW_PLAYING_URL, TRENDING_URL , POPULAR , TOP_RATED } from '../config/endpointApi'
+import { BASE_URL, NOW_PLAYING_URL, TRENDING_URL, POPULAR, TOP_RATED, GENRE, LIST, MULTI, SEARCH } from '../config/endpointApi'
 import { formatResult } from '../utils/common'
 
 
@@ -28,7 +28,7 @@ export const getTrendings = async (mediaType: MediaType): Promise<Film[]> => {
       }>
     >(`${TRENDING_URL}/${mediaType}/week`)
 
-    return data.results.map((val) => formatResult(val ,mediaType))
+    return data.results.map((val) => formatResult(val, mediaType))
   } catch (error) {
     return []
   }
@@ -66,9 +66,9 @@ export const getPopulars = async (
       }
     })
 
-    return data.results.map((val) => formatResult(val ,mediaType))
+    return data.results.map((val) => formatResult(val, mediaType))
   } catch (error) {
-       return []
+    return []
   }
 }
 
@@ -93,7 +93,7 @@ export const getTopRated = async (
     })
 
     return {
-      films: data.results.map((val) => formatResult(val ,mediaType )),
+      films: data.results.map((val) => formatResult(val, mediaType)),
       totalPages: data.total_pages
     }
   } catch (error) {
@@ -108,20 +108,18 @@ export const getTopRated = async (
 export const searchKeyWord = async (
   query: string,
   page = 1
-): Promise<
-  { 
-    totalResults: number,
-    film: Film[]
-  }
-> => {
+): Promise<{
+  totalResults: number
+  film: Film[]
+}> => {
   try {
     const { data } = await axiosServices.get<
       any,
       AxiosResponse<{
-        total_Results: number
+        total_results: number
         results: unknown[]
       }>
-    >(`/search/multi`, {
+    >(`${SEARCH}/${MULTI}`, {
       params: {
         query,
         page
@@ -129,18 +127,43 @@ export const searchKeyWord = async (
     })
 
     return {
-      totalResults: data.total_Results,
+      totalResults: data.total_results,
       film: data.results.map((val) => formatResult(val))
     }
-    
   } catch (error) {
     return {
       totalResults: 0,
       film: []
     }
-     
-   
   }
+}
 
-  
+
+export const getGenres = async (
+  mediaType: MediaType,
+): Promise<Genre[]> => {
+  try {
+    const { data } = await axiosServices.get<
+      any,
+      AxiosResponse<{
+        genres: unknown[]
+      }>
+    >(`${GENRE}/${mediaType}/${LIST}`)
+
+    return data.genres as Genre[]
+  } catch (error) {
+    return []
+  }
+}
+
+
+
+export const getDetail = async (mediaType: MediaType , id:number): Promise<Film> => {
+  try {
+    const { data } = await axiosServices.get(`/${mediaType}/${id}`)
+
+    return formatResult(data)
+  } catch (error) {
+    return undefined
+  }
 }

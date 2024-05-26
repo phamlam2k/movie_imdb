@@ -42,7 +42,6 @@ const HomeScreen = () => {
 
    const fetchTopratedTV = async () => {
     const response = await ((await getTopRated('tv')).films)
-    console.log(response)
     setTopratedTV(response)
 
   }
@@ -90,7 +89,11 @@ const HomeScreen = () => {
             className='w-[100%]'
           >
             {inTheaters.map((film) => (
-              <Card title={film.title} key={film.id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
+              <Card  
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)} 
+              title={film.title} 
+              key={film.id} 
+              imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
             ))}
           </Slider>
         </Section>
@@ -104,7 +107,10 @@ const HomeScreen = () => {
             className='w-[100%]'
           >
             {populars.map((film) => (
-              <Card title={film.title} key={film.id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
+              <Card 
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)} 
+              title={film.title} 
+              key={film.id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
             ))}
           </Slider>
         </Section>
@@ -118,7 +124,11 @@ const HomeScreen = () => {
             className='w-[100%]'
           >
             {topratedTV.map((film) => (
-              <Card title={film.title} key={film.id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
+              <Card 
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)} 
+              title={film.title} 
+              key={film.id} 
+              imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
             ))}
           </Slider>
         </Section>
@@ -132,7 +142,11 @@ const HomeScreen = () => {
             className='w-[100%]'
           >
             {topratedMovie.map((film) => (
-              <Card title={film.title} key={film.id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
+              <Card 
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}  
+              title={film.title} 
+              key={film.id}
+              imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`} />
             ))}
           </Slider>
         </Section>

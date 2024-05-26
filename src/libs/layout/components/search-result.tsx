@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
 import { Film } from '../../../interface'
-import { Image } from '../../components/image'
 import { mergeClassName } from '../../utils/common'
 import { searchKeyWord } from '../../api/api'
-import { Films } from './../../../screens/Home/components/film';
 import { IMAGE_URL, IMAGE_WIDTH } from '../../config/common'
+import { useGlobalContext } from '../../providers/RootLayout'
+import { useNavigate } from 'react-router-dom';
 
 
 interface Props {
@@ -19,16 +19,22 @@ export const SearchResult = (props: Props) => {
 
   const searchTimeOut = useRef<any>('')
 
+  const navigate = useNavigate();
+
+  const {genres} = useGlobalContext();
+
+
+
   const fetch = async() => { 
     if(!props.keyword) return
     clearTimeout(searchTimeOut.current)
     searchTimeOut.current = setTimeout( async() => {
       const res = await searchKeyWord(props.keyword)  
+      console.log(res.totalResults)
       setTotalItem(res.totalResults)
       setItem(res.film)
-    }, 120)
+    }, 10)
    
- 
   }
 
   useEffect(() => {
@@ -44,6 +50,8 @@ export const SearchResult = (props: Props) => {
                 rounded-md
                 overflow-hidden
                 bg-header
+                max-h-[1000px]
+                overflow-y-auto
                 z-20
             '
     >
@@ -51,6 +59,7 @@ export const SearchResult = (props: Props) => {
         <div
           key={id}
           className='flex items-start p-2 rounded-lg hover:bg-primary cursor-pointer m-2 gap-3'
+          onClick={() => navigate(`/${film.mediaType}/${film.id})`)}
         >
           {/* img */}
           <div className={mergeClassName(
@@ -65,13 +74,17 @@ export const SearchResult = (props: Props) => {
             <p className='text-base font-semibold overflow-hidden'>{film.title}</p>
             <ul className='flex flex-wrap gap-1.5 opacity-70'>
               {film.genreIds.map((id, i) => (
-                <li key={i} className='text-sm'>items {i}</li>
+                <li key={i} className='text-sm'>
+                  {
+                    genres[film.mediaType].find(g => g.id === id)?.name
+                  }
+                </li>
               ))}
             </ul>
           </div>
         </div>
       ))}
-      {totalItem >= 6 ? (
+      {totalItem >= 7 ? (
         <button
           className='px-3 py-1.5 bg-primary w-full mx-1 hover:text-body sticky bottom-0 shadow-lg'
           onClick={() => props.goToSearchPage}

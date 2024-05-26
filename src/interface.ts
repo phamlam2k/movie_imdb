@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { MediaType } from './types/catalog.type'
+import { Geners } from './libs/config/common';
 
 export interface CustomComponentProps {
   children?: ReactNode
@@ -34,6 +35,12 @@ export interface Trailer {
   id: number
   key: string
 
-}             
+
+}
+
+export interface Genre {
+  id: number
+  name: string
+}
 
                

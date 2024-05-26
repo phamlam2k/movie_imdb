@@ -7,3 +7,11 @@ export const NOW_PLAYING_URL = `/movie/now_playing`
 export const POPULAR = `/popular`
 
 export const TOP_RATED = `/top_rated`
+
+export const GENRE = '/genre'
+
+export const LIST = '/list'
+
+export const SEARCH = '/search'
+
+export const MULTI = '/multi'
