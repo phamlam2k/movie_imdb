@@ -1,5 +1,6 @@
 import { MediaType } from '../../types/catalog.type'
 import { Film } from '../../interface'
+import { ExitStatus } from 'typescript'
 
 export const mergeClassName = (val1: string, val2?: string) => {
   return val1 + ' ' + (val2 || '')
@@ -12,7 +13,7 @@ export const formatResult = (obj: any , mediaType?: MediaType, ): Film => {
     description: obj.overview,
     coverpath: obj.backdrop_path,
     posterpath: obj.poster_path,
-    genreIds: obj.genre_ids ?? [],
+    genreIds: obj.genre_ids || obj.genres?.map((g: any) => g.id) || [],
     mediaType: mediaType || obj.media_type,
     seasons: obj.seasons ?? []
   }
@@ -40,4 +41,8 @@ export const mergeFilms = (movies: Film[], tvs: Film[], limit = 6) => {
   }
 
   return arrs
+}
+
+export const youtubeThumbNail  = (key: string) => {
+  return  `https://img.youtube.com/vi/${key}/mqdefault.jpg`
 }

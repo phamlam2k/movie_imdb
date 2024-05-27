@@ -17,6 +17,11 @@ const todoReducer = (state: any, action: IActionReducer) => {
         ...state,
         grade: action.payload
       }
+    case ACTION_KEYS.UPDATE_POPULAR:
+      return {
+        ...state,
+        popular: action.payload
+      }
     default:
       return state
   }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Slider from 'react-slick'
 import { Film } from '../../interface'
 import { Section } from './components/section'
@@ -15,6 +15,8 @@ import { IMAGE_URL, IMAGE_WIDTH } from '../../libs/config/common'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { mergeFilms } from './../../libs/utils/common'
+import {  useGlobalReducer } from '../../libs/providers/RootLayout'
+import { ACTION_KEYS } from '../../libs/config/key'
 
 const HomeScreen = () => {
   const navigate = useNavigate()
@@ -23,6 +25,8 @@ const HomeScreen = () => {
   const [populars, setPopulars] = useState<Film[]>([])
   const [topratedTV, setTopratedTV] = useState<Film[]>([])
   const [topratedMovie, setTopratedMovie] = useState<Film[]>([])
+  
+
 
   const fetchTrendingList = async () => {
     const response = await getTrendings('tv')
@@ -37,7 +41,7 @@ const HomeScreen = () => {
   const fetchPopular = async () => {
     const movies = await getPopulars('movie')
     const tvs = await getPopulars('tv')
-
+    
     setPopulars(mergeFilms(movies, tvs, 20))
   }
 
@@ -62,7 +66,7 @@ const HomeScreen = () => {
   return (
     <>
       {/* Trending */}
-      <Section>
+      <Section classNames={'h-[550px]'}>
         <Slider
           autoplay={true}
           slidesToShow={1}
@@ -71,7 +75,7 @@ const HomeScreen = () => {
         >
           {trendings.map((film: Film) => (
             <TrendingHero
-              onPlayTrailer={() => {}}
+              onPlayTrailer={() => { }}
               onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               film={film}
               key={film.id}
@@ -80,7 +84,7 @@ const HomeScreen = () => {
         </Slider>
       </Section>
       {/* In Theater */}
-      <Section title='In Theatre'>
+      <Section title='In Theatre' classNames={'h-[550px]'}>
         <Slider
           autoplay={true}
           slidesToShow={8}
@@ -99,7 +103,7 @@ const HomeScreen = () => {
       </Section>
 
       {/* What's popular */}
-      <Section title="What's popular">
+      <Section title="What's popular" classNames={'h-[550px]'}>
         <Slider
           autoplay={true}
           slidesToShow={8}
@@ -118,7 +122,7 @@ const HomeScreen = () => {
       </Section>
 
       {/* Top rated tv */}
-      <Section title='Top Rated TV'>
+      <Section title='Top Rated TV' classNames={'h-[550px]'}>
         <Slider
           autoplay={true}
           slidesToShow={8}
@@ -137,7 +141,7 @@ const HomeScreen = () => {
       </Section>
 
       {/* Top rated movie */}
-      <Section title='Top Rated Movies'>
+      <Section title='Top Rated Movies' classNames={'h-[550px] '}>
         <Slider
           autoplay={true}
           slidesToShow={8}

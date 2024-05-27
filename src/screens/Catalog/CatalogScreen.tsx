@@ -1,84 +1,84 @@
-import { useEffect, useState } from 'react'
-import { MediaType } from '../../types/catalog.type'
-import { Film } from '../../interface'
-import { useSearchParams } from 'react-router-dom'
-import { Card } from '../Home/components/card'
+import { useEffect, useState } from 'react';
+import { MediaType } from '../../types/catalog.type';
+import { Film } from '../../interface';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Card } from '../Home/components/card';
+import { useGlobalContext } from '../../libs/providers/RootLayout';
+import { IMAGE_URL, IMAGE_WIDTH } from '../../libs/config/common';
 
 interface Props {
-  type: MediaType | 'search'
+  type: MediaType | 'search';
 }
 
 const CatalogScreen = (props: Props) => {
-  let title = ''
+  let title = '';
 
-  const [film, setFilm] = useState<Film[]>([])
-  const [params, _] = useSearchParams()
+  const [film, setFilm] = useState<Film[]>([]);
+  const [params] = useSearchParams();
+  const { popular } = useGlobalContext();
+  const navigate = useNavigate()
+  
+  console.log(popular, props.type);
 
   switch (props.type) {
     case 'movie':
-      title = 'Movie'
-      break
+      title = 'Movies';
+      break;
     case 'tv':
-      title = 'TV'
-      break
-
+      title = 'TV Shows';
+      break;
     case 'search':
-      title = `Search result for  ${params.get('q')} `
-      break
-
+      title = `Search result for ${params.get('q')}`;
+      break;
     default:
-      break
-  }
-
-  const fetch = () => {
-    const arrs: any[] = []
-
-    for (let i = 0; i < 20; i++) {
-      arrs.push({
-        title: ' eqweqwe'
-      })
-    }
-
-    setFilm(arrs)
+      break;
   }
 
   useEffect(() => {
-    fetch()
-  }, [])
+    if (props.type === 'movie') {
+      setFilm(popular?.allmovie || []);
+    } else if (props.type === 'tv') {
+      setFilm(popular?.alltv || []);
+    }
+  }, [props.type, popular]);
+
   return (
     <>
-      {/* background */}
-      <div className='h-[100px] left-0 right-0 top-0 relative '>
-        <div className='overlay-film-cover'></div>
-        <div className='bg-primary w-full rounded-lg overflow-hidden h-[120px] '>
-          <img
-            className='min-h-[120px] w-full h-full object-cover'
-            src=''
-          ></img>
+      {/* Background */}
+      <div className='relative h-[120px]'>
+        <div className='absolute inset-0 bg-primary w-full rounded-lg overflow-hidden'>
+          {props.type !== 'search' && (
+            <img
+              className='h-full w-full object-cover'
+              src={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${props.type === 'movie' ? popular?.allmovie[0]?.posterpath : popular?.alltv[0]?.posterpath}`}
+              alt={`${title} Cover`}
+            />
+          )}
         </div>
       </div>
 
-      {/* POST AND TEXT */}
-      <div className=' mx-auto mt-[-70px] mb-[50px] flex items-center w-[100%]  '>
-        <h1 className='z-[10]  text-[30px] px-6 py-1.5'>
-          {title}
+      {/* Title */}
+      <div className='mx-auto mt-[-50px] mb-[50px] w-full text-center'>
+        <h1 className='text-[30px] px-6 py-1.5'>{title}</h1>
+      </div>
 
-          <div className='grid grid-cols-6  mobile:grid-cols-2 mt-[100px] w-[100%]'>
-            {film.map((film, index) => (
-              <div>
-                <Card
-                  className='w-[410px]'
-                  imageSrc=''
-                  title={film.title}
-                  key={index}
-                ></Card>
-              </div>
-            ))}
+      {/* Movies/TV Shows Grid */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 px-7'>
+        {film.map((film, index) => (
+          <div key={index} className='flex flex-col items-center'>
+            <Card
+              className='w-[80%] h-[100%] mb-1'
+              imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.posterpath}`}
+              onClick={() => {
+                navigate(`/${film.mediaType}/${film.id}`)
+              }}
+            />
+            <h2 className='mt-2 text-center text-lg font-medium'>{film.title}</h2>
           </div>
-        </h1>
+        ))}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default CatalogScreen
+export default CatalogScreen;

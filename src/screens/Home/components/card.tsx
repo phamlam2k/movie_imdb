@@ -18,8 +18,8 @@ export const Card = (props: Props) => {
     <div className={props.className}> 
         <div className="mx-3 my-1.5 px-6 w-[100%] h-[450px] flex flex-col p-0 cursor-pointer gap-7"
              onClick={() => (props.onClick? props.onClick(): '')}>
-            <img src={props.imageSrc} alt={props.title} className="w-full h-full bg-primary object-cover" />
-            <p className="py-1.5 line-">{props.title?? props.original_name}</p>
+            <img src={props.imageSrc} alt={props.title} className="w-full h-full bg-primary object-cover rounded-lg"  />
+            <p className="py-1.5 ">{props.title}</p>
         </div>
     </div>  
     );   

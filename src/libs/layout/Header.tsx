@@ -101,7 +101,7 @@ const Header = () => {
         mobile:bg-header
         '
         >
-          <Link className={getMenuClass('/movies')} to={'/movies'}>
+          <Link className={getMenuClass('/movie')} to={'/movie'}>
             Movies
           </Link>
           <Link className={getMenuClass('/tv')} to={'/tv'}>

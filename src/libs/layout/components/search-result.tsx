@@ -20,12 +20,11 @@ export const SearchResult = (props: Props) => {
   const navigate = useNavigate()
 
   const fetch = async (keyword: string) => {
-    if (keyword) return
+    if (!keyword) return
 
     clearTimeout(searchTimeOut.current)
     searchTimeOut.current = setTimeout(async () => {
       const res = await searchKeyWord(keyword)
-      console.log(res.totalResults)
       setTotalItem(res.totalResults)
       setItem(res.film)
     }, 10)

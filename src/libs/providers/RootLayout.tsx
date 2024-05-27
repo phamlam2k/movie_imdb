@@ -1,12 +1,13 @@
 import { MediaType } from '../../types/catalog.type'
 import Footer from '../layout/Footer'
 import Header from '../layout/Header'
-import { Genre } from '../../interface'
-import { createContext, useContext, useEffect, useReducer } from 'react'
-import { getGenres } from '../api/api'
+import { Film, Genre } from '../../interface'
+import { createContext, useContext, useEffect, useReducer, useState } from 'react'
+import { getGenres, getPopulars, getTrendings } from '../api/api'
 import todoReducer from './reducers/root.reducer'
 import { ACTION_KEYS } from '../config/key'
 import { Outlet } from 'react-router-dom'
+import { mergeFilms } from '../utils/common'
 
 type Genres = {
   [key in MediaType]: Genre[]
@@ -14,6 +15,11 @@ type Genres = {
 
 export type IState = {
   genres: Genres
+  popular: {
+    allmovie: Film[],
+    alltv: Film[]
+  }
+  name: string
   grade: number
 }
 
@@ -22,15 +28,26 @@ const initialState: IState = {
     movie: [],
     tv: []
   },
-  grade: 0
+  popular: {
+    allmovie: [],
+    alltv: []
+  },
+  grade: 0,
+  name: ''
 }
 
+
+
+
 export const GlobalContext = createContext<IState>(initialState)
+
 
 export const GlobalReducer = createContext(null)
 
 const RootLayout = () => {
   const [value, dispatch] = useReducer(todoReducer, initialState)
+
+  const [film, setFilms] = useState<Film>(null)
 
   const fetchGenre = async () => {
     const movie = await getGenres('movie')
@@ -45,8 +62,23 @@ const RootLayout = () => {
     })
   }
 
+  const fetchAll = async () => {
+    const allmovie = await getTrendings('movie')
+    const alltv = await getTrendings('tv')
+
+    dispatch({
+      type: ACTION_KEYS.UPDATE_POPULAR,
+      payload: {
+        allmovie,
+        alltv
+      }
+    })
+  }
+  
+
   useEffect(() => {
     fetchGenre()
+    fetchAll()
   }, [])
 
   return (

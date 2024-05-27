@@ -7,13 +7,8 @@ export interface CustomComponentProps {
   className?: String
 }
 
-export interface Season {
-  id: number
-  seasonNumber: number
-}
- 
 
-export interface Film { 
+export interface Film {
   id: number
   mediaType: MediaType
   title: string
@@ -22,6 +17,7 @@ export interface Film {
   coverpath: string
   genreIds: number[]
   seasons: Season[]
+  poster_path?: string
 }
 
 export interface Cast {
@@ -34,6 +30,7 @@ export interface Cast {
 export interface Trailer {
   id: number
   key: string
+  type: string
 
 
 }
@@ -43,4 +40,23 @@ export interface Genre {
   name: string
 }
 
+export interface Episode {
+  id: number
+  title: string
+  overview: string
+  airDate: string
+  stillPath: string
+  episodeNumber: number
+}
+
+
+export interface Season {
+  id: number
+  filmName: string
+  name: string
+  season_number: number
+  poster_path: string
+  episodes: Episode[]
+  airDate: string
+}
                

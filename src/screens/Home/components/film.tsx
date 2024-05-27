@@ -6,13 +6,14 @@ import RootLayout, {
 import { MediaType } from '../../../types/catalog.type'
 import { Image } from '../../../libs/components/image'
 import { Section } from './section'
-import { Film, Cast, Trailer } from '../../../interface'
+import { Film as FilmInterface, Cast, Trailer } from '../../../interface'
 import { useEffect, useState } from 'react'
 import { Card } from './card'
 import Slider from 'react-slick'
-import { getDetail } from '../../../libs/api/api'
+import { getCasts, getDetail, getRecommendations, getTrailers } from '../../../libs/api/api'
 import { IMAGE_URL, IMAGE_WIDTH } from '../../../libs/config/common'
 import { ACTION_KEYS } from '../../../libs/config/key'
+import { mergeClassName, youtubeThumbNail } from '../../../libs/utils/common'
 
 interface Props {
   mediaType: MediaType
@@ -21,29 +22,28 @@ interface Props {
 export const Films = (props: Props) => {
   const { id } = useParams<{ id: string }>()
 
-  const [film, setFilm] = useState<Film | null>(null)
+  const [film, setFilm] = useState<FilmInterface | null>(null)
   const [casts, setCasts] = useState<Cast[]>([])
   const [trailer, setTrailers] = useState<Trailer[]>([])
-  const [recommendations, setRecommendations] = useState<Cast[]>([])
-  const { genres, grade } = useGlobalContext()
+  const [recommendations, setRecommendations] = useState<FilmInterface[]>([])
+  const { genres } = useGlobalContext()
   const dispatch = useGlobalReducer()
+  const navigate = useNavigate()
 
-  const naivagte = useNavigate()
+
+
+
 
   const fetch = async () => {
-    const response = await getDetail(props.mediaType, parseInt(id))
+    const film = await getDetail(props.mediaType, parseInt(id))
+    const Cast = await getCasts(film.mediaType, film.id)
+    const Trailer = await getTrailers(film.mediaType, film.id)
+    const Recomendation = await getRecommendations(film.mediaType, film.id)
 
-    setFilm(response)
-
-    const arrs: any[] = []
-
-    for (let i = 0; i < 20; i++) {
-      arrs.push({})
-    }
-
-    setCasts(arrs)
-    setTrailers(arrs)
-    setRecommendations(arrs)
+    setFilm(film)
+    setCasts(Cast)
+    setTrailers(Trailer)
+    setRecommendations(Recomendation)
   }
 
   useEffect(() => {
@@ -51,8 +51,10 @@ export const Films = (props: Props) => {
     dispatch({
       type: ACTION_KEYS.UPDATE_GRADE,
       payload: 10
-    }) // = setState
-  }, [])
+    })
+
+
+  }, [id])
 
   if (film === null) {
     return <div></div>
@@ -81,18 +83,18 @@ export const Films = (props: Props) => {
           </div>
           {/* absolute top-[350px] left-[400px] */}
           <div className=' absolute top-[450px] left-[500px] min-w-[10px]'>
-            <p className='text-xl text-[50px] line-camp-1'>{film.title}</p>
+            <p className=' text-[45px] line-camp-1'>{film.title}</p>
             <ul className='flex items-center gap-5 cursor-pointer horver:bg-'>
               {film.genreIds.map((id, i) => (
                 <li
                   className=' px-7 py-3 my-4 bg-header  text-sm rounded-lg'
                   key={i}
                 >
-                  {/* {genres[film.mediaType]?.find((g) => g.id === id)?.name} */}
+                  {genres[film.mediaType]?.find((g) => g.id === id)?.name}
                 </li>
               ))}
             </ul>
-            <p className='text-xl line-camp-3 py-20 opacity-[0.5]  w-[80%]'>
+            <p className='text-xl line-camp-3 opacity-[0.5]  w-[80%]'>
               {film.description}
             </p>
           </div>
@@ -103,11 +105,11 @@ export const Films = (props: Props) => {
 
       <div>
         <Section title='Casts'>
-          <div className='overflow-x-auto scrollbar  scrollbar-thumb-header scrollbar-track-gray-300'>
+          <div className='overflow-x-auto scrollbar  scrollbar-thumb-header scrollbar-track-gray-600'>
             <div className='flex items-center gap-3 min-w-max'>
               {casts.map((cast, i) => (
                 <div className='flex-shrink-0 w-[280px] mb-0' key={i}>
-                  <Card imageSrc='' title='Danny Rand eqweeq' />
+                  <Card imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${cast.profilePath}`} title={`${cast.characterName}`} original_name={`${cast.name}`} />
                 </div>
               ))}
             </div>
@@ -118,12 +120,23 @@ export const Films = (props: Props) => {
       {/* Trailer */}
 
       <div>
-        <Section title='Trailer'>
-          <div className='overflow-x-auto scrollbar  scrollbar-thumb-header scrollbar-track-gray-300'>
-            <div className='flex items-center gap-3 min-w-max'>
-              {trailer.map((cast, i) => (
-                <div className='flex-shrink-0 w-[450px] mb-0' key={i}>
-                  <Card imageSrc='' title='' />
+        <Section title='Trailer' classNames={'h-[450px] mt-[50px]'}>
+          <div className='overflow-x-auto scrollbar  scrollbar-thumb-header scrollbar-track-gray-600'>
+            <div className='ml-[30px] flex items-center gap-10 min-w-max'>
+              {trailer.map((trailer, i) => (
+                <div className='flex-shrink-0 w-[450px] mb-0 pt-10 py-20' key={i}>
+                  <div
+                    className={mergeClassName(
+                      'bg-primary w-full rounded-lg  h-[250px]'
+                    )}
+                  >
+                    <img
+                      src={youtubeThumbNail(trailer.key)}
+                      className='min-h-[200px] w-full h-full'
+                      alt='image_movie'
+                    />
+                    <p className="py-3 ">{trailer.type}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -131,30 +144,51 @@ export const Films = (props: Props) => {
         </Section>
       </div>
 
+
       {/* Season */}
-      <Section title='Season'>
-        <Slider slidesToShow={3} slidesToScroll={2}>
-          {film.seasons.map((season, id) => (
+      {props.mediaType === 'tv' && (
+        <Section title="Season" classNames=''>
+          {film.seasons.length > 1 ? (
+            <Slider autoplay={true} slidesToShow={2} slidesToScroll={1}>
+              {film.seasons.map((season, id) => (
+                <Card
+                  title={`Season: ${season.name}`}
+                  className="h-[600px] w-full"
+                  key={id}
+                  imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${season.poster_path}`}
+                  onClick={() => {
+                    navigate(`/tv/${film.id}/season/seasons`);
+                  }}
+                />
+              ))}
+            </Slider>
+          ) : (
             <Card
-              title={`Season: ${season.seasonNumber}`}
-              key={id}
-              imageSrc=''
+              title={`Season: ${film.seasons[0].name}`}
+              className="w-[400px] h-auto object-cover"
+              key={film.seasons[0].id}
+              imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${film.seasons[0].poster_path}`}
               onClick={() => {
-                naivagte(`/tv/${film.id}/season/${season.id}`)
+                navigate(`/tv/${film.id}/season/seasons`);
               }}
-            ></Card>
+            />
+          )}
+        </Section>
+      )}
+
+
+      {/* Recommendation */}
+      <Section title='Recomendtaion' classNames={'mt-[40px]'}>
+        <Slider autoplay={true} slidesToShow={8} slidesToScroll={2}>
+          {recommendations.map((re, id) => (
+            <Card
+              onClick={() => { navigate(`/${props.mediaType}/${re.id}`); }}
+              title={re.title} key={id} imageSrc={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${re.coverpath}`}></Card>
           ))}
         </Slider>
       </Section>
 
-      {/* Recommendation */}
-      <Section title='Recomendtaion'>
-        <Slider autoplay={true} slidesToShow={8} slidesToScroll={2}>
-          {recommendations.map((re, id) => (
-            <Card title='' key={id} imageSrc=''></Card>
-          ))}
-        </Slider>
-      </Section>
+
     </>
   )
 }

@@ -15,3 +15,9 @@ export const LIST = '/list'
 export const SEARCH = '/search'
 
 export const MULTI = '/multi'
+
+export const CREDITS = '/credits'
+
+export const VIDEOS = '/videos'
+
+export const RECOMMENDATION = '/recommendations'
