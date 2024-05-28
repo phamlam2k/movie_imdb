@@ -65,34 +65,27 @@ export const Season = () => {
         </Section>
       </div>
 
-      {/* Eposodies*/}
-        {season.episodes?.map((episodes, index) => (
-      <Section title={`Episode ${episodes.episodeNumber}`}>
-          <div
-            className='mb-6 flex items-stretch gap-4 rounded-md overflow-hidden cursor-pointer hover:bg-primary px-3 py-1.5  '
-            key={index}
-          >
-            <div className='bg-primary w-[400px] rounded-lg h-[460px] min-w-[300px]'>
+     
+      {/* Episodes */}
+      {season.episodes?.map((episode, index) => (
+        <Section title={`Episode ${episode.episodeNumber}`} key={index}>
+          <div className='mb-6 flex items-stretch gap-4 rounded-md overflow-hidden cursor-pointer hover:bg-gray-700 transition-colors duration-300 px-3 py-1.5'>
+            <div className='bg-primary w-[400px] rounded-lg h-[260px] min-w-[200px] overflow-hidden shadow-lg'>
               <img
-                src={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${episodes.stillPath}`}
-                className='min-w-[200px] w-[100%] h-full object-cover'
-              ></img>
+                src={`${IMAGE_URL}/${IMAGE_WIDTH.ORIGINAL}${episode.stillPath}`}
+                className='min-w-[200px] w-full h-full object-cover'
+                alt='Episode Still'
+              />
             </div>
-
-            <div className='px-1 w-[80%]  overflow-hidden flex flex-col gap-3   '>
-              <p className='text-[25px] truncate'>
-               {episodes.title}
-              </p>
-
-              <p className='text-[25px] opacity-[0.9] lime-clamp-5'>
-                {episodes.overview}
-              </p>
-
-              <div className='text-[25px] mt-auto pt-3 text-right'>{episodes.airDate}</div>
+            <div className='px-1 w-full overflow-hidden flex flex-col gap-3'>
+              <h2 className='text-2xl text-white font-semibold truncate'>{episode.title}</h2>
+              <p className='text-lg text-white opacity-75 line-clamp-3'>{episode.overview}</p>
+              <div className='text-lg text-right text-white mt-auto'>{episode.airDate}</div>
             </div>
           </div>
-          </Section>
-        ))}
+        </Section>
+      ))}
+
       
     </>
   )

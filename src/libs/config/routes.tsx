@@ -4,6 +4,7 @@ import { Season } from '../../screens/Home/components/season'
 import { Films } from '../../screens/Home/components/film'
 import { RouteObject } from 'react-router-dom'
 import RootLayout from '../providers/RootLayout'
+import Trailer from '../../screens/Home/components/trailer'
 
 const ROUTERS: RouteObject[] = [
   {
@@ -23,8 +24,8 @@ const ROUTERS: RouteObject[] = [
         element: <Films mediaType='movie' />
       },
       {
-        path: '/movie/:idseason/:seasonNumber',
-        element: <Season />
+        path: '/movie/:id/trailer/:trailerid',
+        element: <Trailer mediaType='movie'/>
       },
       {
         path: '/tv/',
@@ -33,6 +34,10 @@ const ROUTERS: RouteObject[] = [
       {
         path: '/tv/:id',
         element: <Films mediaType='tv' />
+      },
+      {
+        path: '/tv/:id/trailer/:trailerid',
+        element: <Trailer mediaType='tv'/>
       },
       {
         path: '/tv/:id/season/:seasonNumber',

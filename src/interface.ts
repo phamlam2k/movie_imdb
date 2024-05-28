@@ -28,11 +28,9 @@ export interface Cast {
 }
 
 export interface Trailer {
-  id: number
-  key: string
-  type: string
-
-
+  id: string
+  key: string // YouTube video ID
+  type?: string // e.g., 'Trailer'
 }
 
 export interface Genre {

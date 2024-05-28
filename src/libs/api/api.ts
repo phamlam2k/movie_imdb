@@ -29,7 +29,7 @@ export const getTrendings = async (mediaType: MediaType): Promise<Film[]> => {
     >(`${TRENDING_URL}/${mediaType}/week`)
 
     return data.results.map((val) => formatResult(val, mediaType))
-    
+
   } catch (error) {
     return []
   }
@@ -110,13 +110,15 @@ export const searchKeyWord = async (
   query: string,
   page = 1
 ): Promise<{
-  totalResults: number
+  totalPages: number
+  totalResults?: number
   film: Film[]
 }> => {
   try {
     const { data } = await axiosServices.get<
       any,
       AxiosResponse<{
+        total_pages: number
         total_results: number
         results: unknown[]
       }>
@@ -128,11 +130,13 @@ export const searchKeyWord = async (
     })
 
     return {
+      totalPages: data.total_pages,
       totalResults: data.total_results,
       film: data.results.map((val) => formatResult(val))
     }
   } catch (error) {
     return {
+      totalPages: 0,
       totalResults: 0,
       film: []
     }
@@ -197,7 +201,7 @@ export const getCasts = async (
 
 export const getTrailers = async (
   mediaType: MediaType,
-  id: number
+  id: number,
 ): Promise<Trailer[]> => {
   try {
     const { data } = await axiosServices.get<
@@ -302,12 +306,11 @@ export const discover = async (
       totalPages: data.total_pages
     }
   } catch (error) {
-    console.error(error)
+    return {
+      films: [],
+      totalPages: 0
+    }
   }
 
-  return {
-    films: [],
-    totalPages: 0
-  }
 }
 
