@@ -5,6 +5,8 @@ import { Films } from '../../screens/Home/components/film'
 import { RouteObject } from 'react-router-dom'
 import RootLayout from '../providers/RootLayout'
 import Trailer from '../../screens/Home/components/trailer'
+import CatologLogin from '../../screens/Catalog/CatalogLogin'
+import CatologSignUp from '../../screens/Catalog/CatalogSignUp'
 
 const ROUTERS: RouteObject[] = [
   {
@@ -47,6 +49,14 @@ const ROUTERS: RouteObject[] = [
       {
         path: '/search',
         element: <CatalogScreen type='search' />
+      },
+      {
+        path: '/login',
+        element: <CatologLogin />
+      },
+       {
+        path: '/signup',
+        element: <CatologSignUp />
       }
     ]
   }

@@ -107,6 +107,9 @@ const Header = () => {
           <Link className={getMenuClass('/tv')} to={'/tv'}>
             TV
           </Link>
+            <Link className={getMenuClass('/login')} to={'/login'}>
+            Login
+          </Link>
         </div>
       </div>
       {/* Search */}
